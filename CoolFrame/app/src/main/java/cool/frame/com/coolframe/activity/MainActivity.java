@@ -1,15 +1,16 @@
-package cool.frame.com.coolframe;
+package cool.frame.com.coolframe.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cool.frame.com.coolframe.adapter.MyBaseAdapter;
+import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyNewsAdapter;
 import cool.frame.com.coolframe.api.GitJuHeApi;
 import cool.frame.com.coolframe.base.BaseListRefreshActivity;
 import cool.frame.com.coolframe.model.JuHeOut;
 import cool.frame.com.coolframe.utils.Config;
 import cool.frame.com.coolframe.utils.GsonUtils;
+import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

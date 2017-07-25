@@ -29,7 +29,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final BaseViewHolder viewHolder = new BaseViewHolder(mContext, mLayoutId);
+        final BaseViewHolder viewHolder = new BaseViewHolder(mContext, mLayoutId,parent);
         return viewHolder;
     }
 

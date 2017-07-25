@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,8 +39,8 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
      *
      * @param resId 布局资源文件id
      */
-    public BaseViewHolder(Context context, @LayoutRes int resId) {
-        super(LayoutInflater.from(context).inflate(resId, null));
+    public BaseViewHolder(Context context, @LayoutRes int resId, ViewGroup viewGroup) {
+        super(LayoutInflater.from(context).inflate(resId, viewGroup, false));
         viewArray = new SparseArray<>();
     }
 

@@ -5,12 +5,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import java.util.List;
 
 import butterknife.BindView;
-import cool.frame.com.coolframe.LoadMoreFooterView;
+import cool.frame.com.coolframe.utils.LoadMoreFooterView;
 import cool.frame.com.coolframe.R;
-import cool.frame.com.coolframe.adapter.MyBaseAdapter;
+import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
 import cool.frame.com.library.adapter.recyclerview.HRecyclerView;
 import cool.frame.com.library.adapter.recyclerview.OnLoadMoreListener;
 import cool.frame.com.library.adapter.recyclerview.OnRefreshListener;
+import cool.frame.com.library.adapter.recyclerview.SpaceItemDecoration;
 
 /**
  * 集成下拉刷新上拉加载更多
@@ -42,6 +43,7 @@ public abstract class BaseListRefreshActivity<T> extends BaseActivity implements
     public void initView() {
         mAdapter = getListAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new SpaceItemDecoration(15));
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOnLoadMoreListener(this);
         recyclerView.setOnRefreshListener(this);

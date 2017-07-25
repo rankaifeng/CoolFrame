@@ -1,11 +1,10 @@
-package cool.frame.com.coolframe.adapter;
+package cool.frame.com.library.adapter.adapter;
 
 import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cool.frame.com.library.adapter.adapter.CommonAdapter;
 import cool.frame.com.library.adapter.holder.BaseViewHolder;
 
 /**

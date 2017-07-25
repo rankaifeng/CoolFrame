@@ -1,4 +1,4 @@
-package cool.frame.com.coolframe;
+package cool.frame.com.coolframe.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,9 +9,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import cool.frame.com.coolframe.R;
 import cool.frame.com.library.adapter.recyclerview.RefreshTrigger;
 
-
+/**
+ * 下拉刷新
+ */
 public class ClassicRefreshHeaderView extends RelativeLayout implements RefreshTrigger {
     private ImageView ivArrow;
 

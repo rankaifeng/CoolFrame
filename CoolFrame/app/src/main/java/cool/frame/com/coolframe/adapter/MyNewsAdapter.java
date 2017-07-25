@@ -9,6 +9,7 @@ import java.util.List;
 
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.model.JuHeOut;
+import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
 import cool.frame.com.library.adapter.holder.BaseViewHolder;
 
 /**
