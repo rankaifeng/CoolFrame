@@ -1,12 +1,10 @@
 package cool.frame.com.coolframe.base;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 
 import java.util.List;
 
+import butterknife.BindView;
 import cool.frame.com.coolframe.LoadMoreFooterView;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyBaseAdapter;
@@ -14,7 +12,12 @@ import cool.frame.com.library.adapter.recyclerview.HRecyclerView;
 import cool.frame.com.library.adapter.recyclerview.OnLoadMoreListener;
 import cool.frame.com.library.adapter.recyclerview.OnRefreshListener;
 
-public abstract class BaseListRefreshActivity<T> extends Activity implements OnRefreshListener, OnLoadMoreListener {
+/**
+ * 集成下拉刷新上拉加载更多
+ *
+ * @param <T>
+ */
+public abstract class BaseListRefreshActivity<T> extends BaseActivity implements OnRefreshListener, OnLoadMoreListener {
     public static final String DROP_REFRESH = "drop_refresh ";//下拉刷新标识
     public static final String PULL_UP_LOADING = "up_loading";//上拉加载更多标识
     private static final int RN = 10;//一页显示多少条
@@ -30,16 +33,14 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
      */
     protected abstract MyBaseAdapter<T> getListAdapter();
 
+    @BindView(R.id.recy_view)
     HRecyclerView recyclerView;
     /*加载更多布局*/
     private LoadMoreFooterView mlLoadMoreFooterView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void initView() {
         mAdapter = getListAdapter();
-        recyclerView = (HRecyclerView) findViewById(R.id.recy_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOnLoadMoreListener(this);
@@ -47,6 +48,7 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
         mlLoadMoreFooterView = (LoadMoreFooterView) recyclerView.getLoadMoreFooterView();
         recyclerView.setRefreshing(true);
     }
+
 
     @Override
     public void onRefresh() {

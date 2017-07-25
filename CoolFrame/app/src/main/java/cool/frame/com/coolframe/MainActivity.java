@@ -1,7 +1,5 @@
 package cool.frame.com.coolframe;
 
-import android.os.Bundle;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +25,8 @@ public class MainActivity extends BaseListRefreshActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public int setLayoutId() {
+        return R.layout.activity_main;
     }
 
     @Override

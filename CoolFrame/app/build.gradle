@@ -32,4 +32,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':library')
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.jakewharton:butterknife:8.7.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 }
