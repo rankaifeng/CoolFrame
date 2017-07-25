@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp">
+    <!--没有更多的数据-->
+    <include
+        android:id="@+id/theEndView"
+        layout="@layout/load_more_nodata" />
+    <!--加载错误-->
+    <include
+        android:id="@+id/errorView"
+        layout="@layout/load_more_footer_error" />
+    <!--正在加载-->
+    <include
+        android:id="@+id/loadingView"
+        layout="@layout/load_more_footer_loading" />
+
+</merge>
