@@ -19,10 +19,20 @@ public abstract class MyBaseAdapter<T> extends CommonAdapter {
         super(context, layoutId, datas);
         this.datas = datas;
     }
+
     public void setData(List<T> data) {
-        datas.add((T) data);
+        datas.addAll(data);
+        notifyItemInserted(datas.size() + 1);
+    }
+
+    public void clearData(List<T> data) {
+        if (datas.size() > 0) {
+            datas.clear();
+        }
+        datas.addAll(data);
         notifyDataSetChanged();
     }
+
     public void convert(BaseViewHolder holder, int position) {
         showHnadDatas(holder, position);
     }

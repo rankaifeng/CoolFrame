@@ -10,17 +10,15 @@ import java.util.List;
 import cool.frame.com.coolframe.LoadMoreFooterView;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyBaseAdapter;
-import cool.frame.com.coolframe.model.JuHeOut;
 import cool.frame.com.library.adapter.recyclerview.HRecyclerView;
 import cool.frame.com.library.adapter.recyclerview.OnLoadMoreListener;
 import cool.frame.com.library.adapter.recyclerview.OnRefreshListener;
 
 public abstract class BaseListRefreshActivity<T> extends Activity implements OnRefreshListener, OnLoadMoreListener {
-    public static final String REFRESH = "refreshNoLoading";
-    public static final String LOADMORE = "load_more";
-    private static final int MAX_SIZE = 4;
-    private static final int RN = 10;
-    private static int PAGE_NUMBER = 1;
+    public static final String DROP_REFRESH = "drop_refresh ";//下拉刷新标识
+    public static final String PULL_UP_LOADING = "up_loading";//上拉加载更多标识
+    private static final int RN = 10;//一页显示多少条
+    private static int PAGE_NUMBER = 1;//页数
     public String type;
     /**
      * List View 适配器
@@ -30,7 +28,7 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
     /**
      * 子类重写获取适配器
      */
-    protected abstract MyBaseAdapter<JuHeOut> getListAdapter();
+    protected abstract MyBaseAdapter<T> getListAdapter();
 
     HRecyclerView recyclerView;
     /*加载更多布局*/
@@ -40,19 +38,21 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAdapter= (MyBaseAdapter<T>) getListAdapter();
+        mAdapter = getListAdapter();
         recyclerView = (HRecyclerView) findViewById(R.id.recy_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOnLoadMoreListener(this);
         recyclerView.setOnRefreshListener(this);
         mlLoadMoreFooterView = (LoadMoreFooterView) recyclerView.getLoadMoreFooterView();
-        loadServerData(RN, PAGE_NUMBER);
+        recyclerView.setRefreshing(true);
     }
 
     @Override
     public void onRefresh() {
-
+        PAGE_NUMBER = 1;
+        type = DROP_REFRESH;
+        loadServerData(RN, PAGE_NUMBER);
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
         if (mlLoadMoreFooterView.canLoadMore()) {
             mlLoadMoreFooterView.setStatus(LoadMoreFooterView.Status.LOADING);
             PAGE_NUMBER++;
-            type = LOADMORE;
+            type = PULL_UP_LOADING;
             loadServerData(RN, PAGE_NUMBER);
         }
     }
@@ -72,10 +72,6 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
         return recyclerView;
     }
 
-    protected void loadServerData(int rn, int pn) {
-        loadData(rn, pn);
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -85,9 +81,20 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
     /**
      * 请求成功调用的方法
      */
-    protected void setState(List<JuHeOut.Data> mDataSource, String message) {
-        mAdapter.setData((List<T>) mDataSource);
-        mAdapter.notifyDataSetChanged();
+    protected void setState(List<T> mDataSource, String message) {
+        if (type.equals(DROP_REFRESH)) {
+            mAdapter.clearData(mDataSource);
+            recyclerView.setRefreshing(false);
+            mAdapter.notifyDataSetChanged();
+        } else if (type.equals(PULL_UP_LOADING)) {
+            if (mDataSource.size() == 0) {
+                //没有更多数据
+                mlLoadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+            } else {
+                mlLoadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
+                mAdapter.setData(mDataSource);
+            }
+        }
     }
 
 
@@ -95,6 +102,6 @@ public abstract class BaseListRefreshActivity<T> extends Activity implements OnR
      * 调用Service获取数据，
      * 需要在子类中重写
      */
-    protected abstract void loadData(int rn, int pn);
+    protected abstract void loadServerData(int rn, int pn);
 
 }

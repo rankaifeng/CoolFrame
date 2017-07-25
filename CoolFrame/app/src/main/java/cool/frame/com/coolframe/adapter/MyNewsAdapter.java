@@ -15,7 +15,7 @@ import cool.frame.com.library.adapter.holder.BaseViewHolder;
  * Created by rankaifeng on 2017/7/24.
  */
 
-public class MyNewsAdapter extends MyBaseAdapter<JuHeOut> {
+public class MyNewsAdapter extends MyBaseAdapter<JuHeOut.Data> {
     private List<JuHeOut.Data> resultList;
     private Context context;
 
