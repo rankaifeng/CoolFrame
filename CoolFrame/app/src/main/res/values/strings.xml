@@ -1,13 +1,3 @@
 <resources>
-    <string name="app_name">CoolFrame</string>
-    <color name="crash_background_color">#ececec</color>
-    <color name="crash_black_text_color_01">#545454</color>
-    <color name="crash_black_text_color_02">#8c8c8c</color>
-    <color name="crash_line_color">#DFDFDF</color>
-    <color name="crash_tool_bar_color">#333333</color>
-    <color name="crash_white">#FFFFFF</color>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <item name="statusbarutil_fake_status_bar_view" type="id"/>
-    <item name="statusbarutil_translucent_view" type="id"/>
+    <string name="app_name">TranslucentBarDemo</string>
 </resources>

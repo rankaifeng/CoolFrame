@@ -39,7 +39,6 @@ public class FoodsModelImp implements FoodsModel {
 
             }
 
-
             @Override
             public void onFailure(Call<JuHeOut> call, Throwable t) {
                 pOnJokeListener.onError("请求失败");
