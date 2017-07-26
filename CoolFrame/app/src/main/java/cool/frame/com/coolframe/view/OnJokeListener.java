@@ -20,5 +20,5 @@ public interface OnJokeListener {
     /**
      * 失败的时候回调
      */
-    void onError();
+    void onError(String error);
 }

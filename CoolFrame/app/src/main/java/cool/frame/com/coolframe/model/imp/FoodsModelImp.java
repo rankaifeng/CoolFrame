@@ -19,25 +19,30 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FoodsModelImp implements FoodsModel {
 
     @Override
-    public void setData(int rn, int pn, final OnJokeListener pOnJokeListener) {
+    public void setData(int rn, int pn, String searStr, final OnJokeListener pOnJokeListener) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Config.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         GitJuHeApi gitJuHeApi = retrofit.create(GitJuHeApi.class);
-        Call<JuHeOut> news = gitJuHeApi.getNews("土豆", rn, pn);
+        Call<JuHeOut> news = gitJuHeApi.getNews(searStr, rn, pn);
         news.enqueue(new Callback<JuHeOut>() {
             @Override
             public void onResponse(Call<JuHeOut> call, final Response<JuHeOut> response) {
                 JuHeOut out = (JuHeOut) GsonUtils.fromJsonToObject(GsonUtils.toJson(response.body()), JuHeOut.class);
-                pOnJokeListener.onSuccess(out.getResult().getData());
+                if (out.getResult() != null) {
+                    pOnJokeListener.onSuccess(out.getResult().getData());
+                } else {
+                    pOnJokeListener.onError("暂无数据");
+                }
+
             }
 
 
             @Override
             public void onFailure(Call<JuHeOut> call, Throwable t) {
-                pOnJokeListener.onError();
+                pOnJokeListener.onError("请求失败");
             }
         });
     }

@@ -24,11 +24,16 @@ public abstract class MyBaseAdapter<T> extends CommonAdapter {
         notifyItemInserted(datas.size() + 1);
     }
 
-    public void clearData(List<T> data) {
+    public void clearAndAddData(List<T> data) {
         if (datas.size() > 0) {
             datas.clear();
         }
         datas.addAll(data);
+        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        datas.clear();
         notifyDataSetChanged();
     }
 

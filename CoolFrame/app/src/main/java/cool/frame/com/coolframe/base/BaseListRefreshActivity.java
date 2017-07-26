@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import java.util.List;
 
 import butterknife.BindView;
+import cool.frame.com.coolframe.utils.Config;
 import cool.frame.com.coolframe.utils.LoadMoreFooterView;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
@@ -21,8 +22,9 @@ import cool.frame.com.library.adapter.recyclerview.SpaceItemDecoration;
 public abstract class BaseListRefreshActivity<T> extends BaseActivity implements OnRefreshListener, OnLoadMoreListener {
     public static final String DROP_REFRESH = "drop_refresh ";//下拉刷新标识
     public static final String PULL_UP_LOADING = "up_loading";//上拉加载更多标识
-    private static final int RN = 10;//一页显示多少条
-    private static int PAGE_NUMBER = 1;//页数
+    public static String SEART_STR = "土豆";
+    public static int RN = 10;//一页显示多少条
+    public static int PAGE_NUMBER = 1;//页数
     public String type;
     /**
      * List View 适配器
@@ -56,7 +58,7 @@ public abstract class BaseListRefreshActivity<T> extends BaseActivity implements
     public void onRefresh() {
         PAGE_NUMBER = 1;
         type = DROP_REFRESH;
-        loadServerData(RN, PAGE_NUMBER);
+        loadServerData(RN, PAGE_NUMBER, SEART_STR);
     }
 
     @Override
@@ -65,7 +67,7 @@ public abstract class BaseListRefreshActivity<T> extends BaseActivity implements
             mlLoadMoreFooterView.setStatus(LoadMoreFooterView.Status.LOADING);
             PAGE_NUMBER++;
             type = PULL_UP_LOADING;
-            loadServerData(RN, PAGE_NUMBER);
+            loadServerData(RN, PAGE_NUMBER, SEART_STR);
         }
     }
 
@@ -87,7 +89,7 @@ public abstract class BaseListRefreshActivity<T> extends BaseActivity implements
      */
     protected void setState(List<T> mDataSource, String message) {
         if (type.equals(DROP_REFRESH)) {
-            mAdapter.clearData(mDataSource);
+            mAdapter.clearAndAddData(mDataSource);
             recyclerView.setRefreshing(false);
             mAdapter.notifyDataSetChanged();
         } else if (type.equals(PULL_UP_LOADING)) {
@@ -106,6 +108,14 @@ public abstract class BaseListRefreshActivity<T> extends BaseActivity implements
      * 调用Service获取数据，
      * 需要在子类中重写
      */
-    protected abstract void loadServerData(int rn, int pn);
+    protected abstract void loadServerData(int rn, int pn, String seartStr);
 
+    /***
+     * 恢复默认设置的值
+     */
+    public void restoreDefault() {
+        RN = Config.RN;
+        PAGE_NUMBER = Config.PAGE_NUMBER;
+        SEART_STR = Config.SEAR_STR;
+    }
 }

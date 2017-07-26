@@ -9,6 +9,6 @@ import cool.frame.com.coolframe.view.OnJokeListener;
 public interface FoodsModel {
 
 
-    void setData(int rn, int pn,OnJokeListener pOnJokeListener);
+    void setData(int rn, int pn,String searStr,OnJokeListener pOnJokeListener);
 
 }

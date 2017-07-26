@@ -28,12 +28,12 @@ public class PresenterImp implements IPresenter, OnJokeListener {
     }
 
     @Override
-    public void onError() {
-
+    public void onError(String str) {
+        view.showError(str);
     }
 
     @Override
-    public void requestData(int rn, int pn) {
-        model.setData(rn, pn, this);
+    public void requestData(int rn, int pn, String searStr) {
+        model.setData(rn, pn, searStr, this);
     }
 }

@@ -5,5 +5,5 @@ package cool.frame.com.coolframe.presenter;
  */
 
 public interface IPresenter {
-    void requestData(int rn, int pn);
+    void requestData(int rn, int pn,String searStr);
 }

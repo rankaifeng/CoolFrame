@@ -10,4 +10,6 @@ import cool.frame.com.coolframe.model.JuHeOut;
 
 public interface GetFoodsView {
     void getDatas(List<JuHeOut.Data> dataList);
+
+    void showError(String str);
 }
