@@ -10,4 +10,5 @@ public class Config {
     public static final int RN = 10;
     public static final int PAGE_NUMBER = 1;
     public static final String SEAR_STR = "土豆";
+    public static final int DEFALT_TIME = 30;
 }
