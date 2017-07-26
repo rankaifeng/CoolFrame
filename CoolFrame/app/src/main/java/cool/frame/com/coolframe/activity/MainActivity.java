@@ -1,24 +1,29 @@
 package cool.frame.com.coolframe.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import cool.frame.com.coolframe.view.GetFoodsView;
+import cool.frame.com.coolframe.presenter.IPresenter;
+import cool.frame.com.coolframe.presenter.imp.PresenterImp;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyNewsAdapter;
-import cool.frame.com.coolframe.api.GitJuHeApi;
 import cool.frame.com.coolframe.base.BaseListRefreshActivity;
 import cool.frame.com.coolframe.model.JuHeOut;
-import cool.frame.com.coolframe.utils.Config;
-import cool.frame.com.coolframe.utils.GsonUtils;
 import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends BaseListRefreshActivity {
+public class MainActivity extends BaseListRefreshActivity implements GetFoodsView {
     private List<JuHeOut.Data> resultList = new ArrayList<>();
+    IPresenter iPresenter;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        iPresenter = new PresenterImp(this);
+    }
 
     @Override
     protected MyBaseAdapter<JuHeOut.Data> getListAdapter() {
@@ -37,26 +42,12 @@ public class MainActivity extends BaseListRefreshActivity {
 
 
     public void requestData(int rn, int pn) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Config.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        iPresenter.requestData(rn, pn);
+    }
 
-        GitJuHeApi gitJuHeApi = retrofit.create(GitJuHeApi.class);
-        Call<JuHeOut> news = gitJuHeApi.getNews("西红柿", rn, pn);
-        news.enqueue(new Callback<JuHeOut>() {
-            @Override
-            public void onResponse(Call<JuHeOut> call, final Response<JuHeOut> response) {
-                JuHeOut out = (JuHeOut) GsonUtils.fromJsonToObject(GsonUtils.toJson(response.body()), JuHeOut.class);
-                resultList = out.getResult().getData();
-                setState(resultList, "");
-            }
-
-
-            @Override
-            public void onFailure(Call<JuHeOut> call, Throwable t) {
-                System.out.print(call);
-            }
-        });
+    @Override
+    public void getDatas(List<JuHeOut.Data> dataList) {
+        resultList = dataList;
+        setState(resultList, "");
     }
 }
