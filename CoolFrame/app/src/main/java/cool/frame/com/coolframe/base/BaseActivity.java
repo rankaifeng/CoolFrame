@@ -1,5 +1,6 @@
 package cool.frame.com.coolframe.base;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import butterknife.ButterKnife;
+import cool.frame.com.coolframe.utils.MyLoadDialog;
 import cool.frame.com.coolframe.utils.StatusBarCompat;
 
 /**
@@ -17,6 +19,8 @@ import cool.frame.com.coolframe.utils.StatusBarCompat;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+    Dialog dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,4 +41,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void initView(); //初始化
 
+
+    public void showDialog(String msg, boolean isOutSide) {
+        dialog = MyLoadDialog.getInstance().createDialog(BaseActivity.this, msg, isOutSide);
+    }
+
+    public void hideDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
 }

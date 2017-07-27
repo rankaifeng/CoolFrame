@@ -1,9 +1,11 @@
 package cool.frame.com.coolframe.presenter;
 
+import android.app.Activity;
+
 /**
  * Created by rankaifeng on 2017/7/25.
  */
 
 public interface IPresenter {
-    void requestData(int rn, int pn,String searStr);
+    void requestData(int rn, int pn, String searStr, Activity activity);
 }

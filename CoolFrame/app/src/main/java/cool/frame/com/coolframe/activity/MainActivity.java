@@ -38,21 +38,22 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        iPresenter = new PresenterImp(this);
-
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String searStr = editTextSearch.getText().toString().trim();
+                type = "";
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(MainActivity.this.getCurrentFocus()
                                 .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 if (searStr.equals("")) {
                     restoreDefault();
-                    iPresenter.requestData(RN, PAGE_NUMBER, SEART_STR);
+                    iPresenter.requestData(RN, PAGE_NUMBER, SEART_STR, MainActivity.this);
                 } else {
                     SEART_STR = searStr;
-                    iPresenter.requestData(RN, PAGE_NUMBER, searStr);
+                    RN = 10;
+                    PAGE_NUMBER = 1;
+                    iPresenter.requestData(RN, PAGE_NUMBER, searStr, MainActivity.this);
                 }
 
             }
@@ -70,13 +71,20 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     }
 
     @Override
-    protected void loadServerData(int rn, int pn, String searStr) {
-        requestData(rn, pn, searStr);
+    protected void loadServerData(int rn, int pn, String searStr, String type) {
+        requestData(rn, pn, searStr, type);
     }
 
 
-    public void requestData(int rn, int pn, String searStr) {
-        iPresenter.requestData(rn, pn, searStr);
+    public void requestData(int rn, int pn, String searStr, String type) {
+        if (iPresenter == null) {
+            iPresenter = new PresenterImp(this);
+        }
+        if (type.equals(DROP_REFRESH) || type.equals(PULL_UP_LOADING)) {
+            iPresenter.requestData(rn, pn, searStr, null);
+            return;
+        }
+        iPresenter.requestData(rn, pn, searStr, MainActivity.this);
     }
 
     @Override
