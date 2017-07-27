@@ -15,7 +15,7 @@ public class BaseRetrofit<T> {
 
     public void sendRequest(Call<T> tCall, final Activity activity, final CallBackListenner<T> backListenner) {
         if (activity != null) {
-            ((BaseActivity) activity).showDialog("加载中......", false);
+            ((BaseActivity) activity).showDialog("加载中......",false);
         }
         tCall.enqueue(new Callback<T>() {
             @Override

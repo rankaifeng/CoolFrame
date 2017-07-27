@@ -3,11 +3,14 @@ package cool.frame.com.coolframe.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.youth.banner.Banner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,7 @@ import cool.frame.com.coolframe.presenter.imp.PresenterImp;
 import cool.frame.com.coolframe.view.GetFoodsView;
 import cool.frame.com.coolframe.view.MClearEditText;
 import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
+import cool.frame.com.library.adapter.recyclerview.HRecyclerView;
 
 public class MainActivity extends BaseListRefreshActivity implements GetFoodsView {
     private List<JuHeOut.Data> resultList = new ArrayList<>();
@@ -34,6 +38,10 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     TextView tvError;
     @BindView(R.id.rel_error)
     RelativeLayout relError;
+    List<String> imgLists;
+    HRecyclerView recyclerView;
+    boolean isHead = false;
+    View view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +66,8 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
 
             }
         });
+        view = LayoutInflater.from(MainActivity.this).inflate(R.layout.recl_head, null);
+        recyclerView = getListView();
     }
 
     @Override
@@ -91,6 +101,18 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     public void getDatas(List<JuHeOut.Data> dataList) {
         resultList = dataList;
         relError.setVisibility(View.GONE);
+        imgLists = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            imgLists.add(dataList.get(i).getAlbums().get(0));
+        }
+        Banner mBanner = (Banner) view.findViewById(R.id.banner);
+        mBanner.setImageLoader(new GlideImageLoader());
+        mBanner.setImages(imgLists);
+        mBanner.start();
+        if (!isHead) {
+            recyclerView.addHeaderView(view);
+            isHead = true;
+        }
         setState(resultList, "");
     }
 

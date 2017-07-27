@@ -11,5 +11,5 @@ import retrofit2.http.Query;
 
 public interface GitJuHeApi {
     @GET("/cook/query?key=1d2e476415bafcd9bf227323b5be850e&menu")
-    Call<JuHeOut> getNews(@Query("menu") String menu, @Query("rn") int rn,@Query("pn") int pn);
+    Call<JuHeOut> getNews(@Query("menu") String menu, @Query("rn") int rn, @Query("pn") int pn);
 }

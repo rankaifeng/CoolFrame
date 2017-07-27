@@ -20,7 +20,7 @@ public class FoodsModelImp extends BaseRetrofit implements FoodsModel {
     public void setData(int rn, int pn, String searStr, final OnJokeListener pOnJokeListener, Activity activity) {
         GitJuHeApi gitJuHeApi = RetrofitInit.getInstance().initRetrofit().create(GitJuHeApi.class);
         Call<JuHeOut> news = gitJuHeApi.getNews(searStr, rn, pn);
-        super.sendRequest(news, activity,new CallBackListenner<JuHeOut>() {
+        super.sendRequest(news, activity, new CallBackListenner<JuHeOut>() {
             @Override
             public void onSuccess(JuHeOut result) {
                 if (result.getResult() != null) {

@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import cool.frame.com.coolframe.utils.Config;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -30,6 +31,7 @@ public class RetrofitInit {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Config.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
         return retrofit;
