@@ -1,5 +1,7 @@
 package cool.frame.com.coolframe.model.imp;
 
+import android.app.Activity;
+
 import cool.frame.com.coolframe.api.BaseRetrofit;
 import cool.frame.com.coolframe.api.GitJuHeApi;
 import cool.frame.com.coolframe.api.RetrofitInit;
@@ -15,10 +17,10 @@ import retrofit2.Call;
 public class FoodsModelImp extends BaseRetrofit implements FoodsModel {
 
     @Override
-    public void setData(int rn, int pn, String searStr, final OnJokeListener pOnJokeListener) {
+    public void setData(int rn, int pn, String searStr, final OnJokeListener pOnJokeListener, Activity activity) {
         GitJuHeApi gitJuHeApi = RetrofitInit.getInstance().initRetrofit().create(GitJuHeApi.class);
         Call<JuHeOut> news = gitJuHeApi.getNews(searStr, rn, pn);
-        super.sendRequest(news, new CallBackListenner<JuHeOut>() {
+        super.sendRequest(news, activity,new CallBackListenner<JuHeOut>() {
             @Override
             public void onSuccess(JuHeOut result) {
                 if (result.getResult() != null) {

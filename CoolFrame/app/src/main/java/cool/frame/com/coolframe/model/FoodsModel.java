@@ -1,5 +1,7 @@
 package cool.frame.com.coolframe.model;
 
+import android.app.Activity;
+
 import cool.frame.com.coolframe.view.OnJokeListener;
 
 /**
@@ -9,6 +11,6 @@ import cool.frame.com.coolframe.view.OnJokeListener;
 public interface FoodsModel {
 
 
-    void setData(int rn, int pn,String searStr,OnJokeListener pOnJokeListener);
+    void setData(int rn, int pn, String searStr, OnJokeListener pOnJokeListener, Activity activity);
 
 }
