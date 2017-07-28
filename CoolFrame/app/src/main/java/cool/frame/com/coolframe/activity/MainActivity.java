@@ -9,8 +9,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +26,7 @@ import butterknife.BindView;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyNewsAdapter;
 import cool.frame.com.coolframe.base.BaseListRefreshActivity;
+import cool.frame.com.coolframe.model.EventMsg;
 import cool.frame.com.coolframe.model.JuHeOut;
 import cool.frame.com.coolframe.presenter.IPresenter;
 import cool.frame.com.coolframe.presenter.imp.PresenterImp;
@@ -42,13 +50,20 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     HRecyclerView recyclerView;
     boolean isHead = false;
     View view;
+    List<String> titles;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+//                Intent mIntent = new Intent(MainActivity.this, EvenBusActivity.class);
+//                startActivity(mIntent);
+
+
                 String searStr = editTextSearch.getText().toString().trim();
                 type = "";
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -68,6 +83,12 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
         });
         view = LayoutInflater.from(MainActivity.this).inflate(R.layout.recl_head, null);
         recyclerView = getListView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -102,13 +123,24 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
         resultList = dataList;
         relError.setVisibility(View.GONE);
         imgLists = new ArrayList<>();
+        titles = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             imgLists.add(dataList.get(i).getAlbums().get(0));
+            titles.add(dataList.get(i).getTitle());
         }
         Banner mBanner = (Banner) view.findViewById(R.id.banner);
         mBanner.setImageLoader(new GlideImageLoader());
+        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
         mBanner.setImages(imgLists);
+        mBanner.setBannerTitles(titles);
         mBanner.start();
+
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                Toast.makeText(MainActivity.this,titles.get(position), Toast.LENGTH_LONG).show();
+            }
+        });
         if (!isHead) {
             recyclerView.addHeaderView(view);
             isHead = true;
@@ -120,5 +152,19 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     public void showError(String str) {
         mAdapter.clearData();
         relError.setVisibility(View.VISIBLE);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventMsg event) {
+        int content = event.getContent();
+        Toast.makeText(MainActivity.this, content + "", Toast.LENGTH_LONG).show();
+//        tvShow.setText(content + "");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
