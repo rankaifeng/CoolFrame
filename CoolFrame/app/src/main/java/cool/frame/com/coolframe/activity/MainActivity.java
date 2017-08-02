@@ -26,14 +26,23 @@ import butterknife.BindView;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyNewsAdapter;
 import cool.frame.com.coolframe.base.BaseListRefreshActivity;
+import cool.frame.com.coolframe.model.DaoMaster;
+import cool.frame.com.coolframe.model.DaoSession;
 import cool.frame.com.coolframe.model.EventMsg;
 import cool.frame.com.coolframe.model.JuHeOut;
+import cool.frame.com.coolframe.model.UserInfo;
+import cool.frame.com.coolframe.model.UserInfoDao;
 import cool.frame.com.coolframe.presenter.IPresenter;
 import cool.frame.com.coolframe.presenter.imp.PresenterImp;
+import cool.frame.com.coolframe.utils.BaseObservable;
+import cool.frame.com.coolframe.utils.BaseSubscribe;
 import cool.frame.com.coolframe.view.GetFoodsView;
 import cool.frame.com.coolframe.view.MClearEditText;
 import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
 import cool.frame.com.library.adapter.recyclerview.HRecyclerView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseListRefreshActivity implements GetFoodsView {
     private List<JuHeOut.Data> resultList = new ArrayList<>();
@@ -51,11 +60,24 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     boolean isHead = false;
     View view;
     List<String> titles;
+    UserInfoDao userInfoDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getApplicationContext(), "User.db", null);
+        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
+        DaoSession daoSession = daoMaster.newSession();
+        userInfoDao = daoSession.getUserInfoDao();
+        UserInfo user = new UserInfo();
+        user.setUserName("李四");
+        user.setAge(233);
+        userInfoDao.insert(user);
+
+        selectDB();
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +105,39 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
         });
         view = LayoutInflater.from(MainActivity.this).inflate(R.layout.recl_head, null);
         recyclerView = getListView();
+
+    }
+
+    private void selectDB() {
+        /*查询单个对象*/
+//        Observable.create(new BaseObservable<UserInfo>() {
+//            @Override
+//            public void subscribes(ObservableEmitter<UserInfo> e) {
+//                UserInfo userInfo = userInfoDao.queryBuilder()
+//                        .where(UserInfoDao.Properties.UserName.eq("张三"))
+//                        .build().unique();
+//                e.onNext(userInfo);
+//            }
+//        }).subscribe(new BaseSubscribe<UserInfo>() {
+//            @Override
+//            public void success(UserInfo userInfo, Disposable disposable) {
+//                UserInfo userInfo1 = userInfo;
+//            }
+//        });
+        /*查询数据库的所有数据返回的是一个list*/
+        Observable.create(new BaseObservable<List<UserInfo>>() {
+            @Override
+            public void subscribes(ObservableEmitter<List<UserInfo>> e) {
+                List<UserInfo> list = userInfoDao.loadAll();
+                e.onNext(list);
+            }
+        }).subscribe(new BaseSubscribe<List<UserInfo>>() {
+            @Override
+            public void success(List<UserInfo> userInfos, Disposable disposable) {
+                List<UserInfo> list1 = new ArrayList<UserInfo>();
+                list1.addAll(userInfos);
+            }
+        });
     }
 
     @Override
@@ -138,7 +193,7 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
         mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                Toast.makeText(MainActivity.this,titles.get(position), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, titles.get(position), Toast.LENGTH_LONG).show();
             }
         });
         if (!isHead) {
