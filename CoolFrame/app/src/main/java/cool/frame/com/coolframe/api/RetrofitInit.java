@@ -1,8 +1,15 @@
 package cool.frame.com.coolframe.api;
 
+import android.app.Activity;
+
 import java.util.concurrent.TimeUnit;
 
+import cool.frame.com.coolframe.base.BaseActivity;
 import cool.frame.com.coolframe.utils.Config;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -35,5 +42,15 @@ public class RetrofitInit {
                 .client(client)
                 .build();
         return retrofit;
+    }
+
+    public <T> void toSubscribe(Activity activity, Observable<T> observable, Observer<T> observer) {
+        if (null != activity) {
+            ((BaseActivity) activity).showDialog("请求中......", true);
+        }
+        observable.subscribeOn(Schedulers.io())    // 指定subscribe()发生在IO线程
+                .observeOn(AndroidSchedulers.mainThread())  // 指定Subscriber的回调发生在io线程
+                .timeout(Config.DEFALT_TIME, TimeUnit.SECONDS)    //重连间隔时间
+                .subscribe(observer);   //订阅
     }
 }

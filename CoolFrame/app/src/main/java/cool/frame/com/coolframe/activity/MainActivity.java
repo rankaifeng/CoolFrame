@@ -3,6 +3,7 @@ package cool.frame.com.coolframe.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import cool.frame.com.coolframe.R;
 import cool.frame.com.coolframe.adapter.MyNewsAdapter;
+import cool.frame.com.coolframe.api.GitJuHeApi;
+import cool.frame.com.coolframe.api.RetrofitInit;
 import cool.frame.com.coolframe.base.BaseListRefreshActivity;
 import cool.frame.com.coolframe.model.DaoMaster;
 import cool.frame.com.coolframe.model.DaoSession;
@@ -34,14 +37,12 @@ import cool.frame.com.coolframe.model.UserInfo;
 import cool.frame.com.coolframe.model.UserInfoDao;
 import cool.frame.com.coolframe.presenter.IPresenter;
 import cool.frame.com.coolframe.presenter.imp.PresenterImp;
-import cool.frame.com.coolframe.utils.BaseObservable;
 import cool.frame.com.coolframe.utils.BaseSubscribe;
 import cool.frame.com.coolframe.view.GetFoodsView;
 import cool.frame.com.coolframe.view.MClearEditText;
 import cool.frame.com.library.adapter.adapter.MyBaseAdapter;
 import cool.frame.com.library.adapter.recyclerview.HRecyclerView;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseListRefreshActivity implements GetFoodsView {
@@ -66,7 +67,7 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-
+        //requestHtpp();//请求网络数据的示例
         DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getApplicationContext(), "User.db", null);
         DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
         DaoSession daoSession = daoMaster.newSession();
@@ -76,7 +77,7 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
         user.setAge(233);
         userInfoDao.insert(user);
 
-        selectDB();
+        //selectDB();//请求数据库的示例
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +109,9 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
 
     }
 
+    /**
+     * 查询数据库
+     */
     private void selectDB() {
         /*查询单个对象*/
 //        Observable.create(new BaseObservable<UserInfo>() {
@@ -125,19 +129,42 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
 //            }
 //        });
         /*查询数据库的所有数据返回的是一个list*/
-        Observable.create(new BaseObservable<List<UserInfo>>() {
+//        Observable.create(new BaseObservable<List<UserInfo>>() {
+//            @Override
+//            public void subscribes(ObservableEmitter<List<UserInfo>> e) {
+//                List<UserInfo> list = userInfoDao.loadAll();
+//                e.onNext(list);
+//            }
+//        }).subscribe(new BaseSubscribe<List<UserInfo>>() {
+//            @Override
+//            public void success(List<UserInfo> userInfos, Disposable disposable) {
+//                List<UserInfo> list1 = new ArrayList<UserInfo>();
+//                list1.addAll(userInfos);
+//            }
+//        });
+    }
+
+    /**
+     * 请求网络数据
+     */
+    private void requestHtpp() {
+        GitJuHeApi gitJuHeApi = RetrofitInit.getInstance().initRetrofit().create(GitJuHeApi.class);
+        Observable<JuHeOut> news = gitJuHeApi.getHttpNews("土豆", 10, 1);
+        RetrofitInit.getInstance().toSubscribe(this, news, new BaseSubscribe<JuHeOut>(this) {
             @Override
-            public void subscribes(ObservableEmitter<List<UserInfo>> e) {
-                List<UserInfo> list = userInfoDao.loadAll();
-                e.onNext(list);
-            }
-        }).subscribe(new BaseSubscribe<List<UserInfo>>() {
-            @Override
-            public void success(List<UserInfo> userInfos, Disposable disposable) {
-                List<UserInfo> list1 = new ArrayList<UserInfo>();
-                list1.addAll(userInfos);
+            public void success(JuHeOut juHeOut, Disposable disposable) {
+                Log.i("------", juHeOut + "");
             }
         });
+
+//        news.subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new BaseSubscribe<JuHeOut>() {
+//                    @Override
+//                    public void success(JuHeOut juHeOut, Disposable disposable) {
+//                        Log.i("------", juHeOut + "");
+//                    }
+//                });
     }
 
     @Override
@@ -170,7 +197,7 @@ public class MainActivity extends BaseListRefreshActivity implements GetFoodsVie
             iPresenter.requestData(rn, pn, searStr, null);
             return;
         }
-        iPresenter.requestData(rn, pn, searStr, MainActivity.this);
+        iPresenter.requestData(rn, pn, searStr, this);
     }
 
     @Override

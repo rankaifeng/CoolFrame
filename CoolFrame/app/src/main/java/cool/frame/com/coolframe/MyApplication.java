@@ -1,6 +1,7 @@
 package cool.frame.com.coolframe;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 
@@ -10,11 +11,13 @@ import com.facebook.stetho.Stetho;
 
 public class MyApplication extends Application {
     private static MyApplication instance;
+    public static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Stetho.initializeWithDefaults(this);
+        context = getApplicationContext();
     }
 
     public static MyApplication getInstance() {
