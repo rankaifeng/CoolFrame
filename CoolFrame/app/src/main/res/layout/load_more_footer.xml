@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cool.frame.com.coolframe.utils.LoadMoreFooterView xmlns:android="http://schemas.android.com/apk/res/android"
+<cool.frame.com.coolframes.utils.LoadMoreFooterView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp" />

@@ -40,7 +40,7 @@
             android:layout_toRightOf="@id/btn_back"
             android:background="@drawable/search_bg">
 
-            <cool.frame.com.coolframe.view.MClearEditText
+            <cool.frame.com.coolframes.view.MClearEditText
                 android:id="@+id/editTextSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -5,7 +5,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "cool.frame.com.coolframe"
+        applicationId "cool.frame.coolframe"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -19,7 +19,9 @@ android {
         }
     }
 }
-
+greendao {
+    schemaVersion 7
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

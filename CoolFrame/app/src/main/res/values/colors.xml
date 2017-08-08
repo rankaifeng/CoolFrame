@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="blue_font">#0078bf</color>
+    <color name="bg">#c8cbcc</color>
+    <color name="bg_common_gray">#ffe2e2e2</color>
+    <color name="app_yellow">#ffff4c06</color>
 </resources>
